@@ -6,8 +6,10 @@ const jwt = require("jsonwebtoken");
 //Register User
 exports.registerUser = async (req, res) => {
   const { email, username, password, isAdmin } = req.body;
+
+  console.log({ email, username, password, isAdmin })
   try {
-    if (!email || !username || !password || isAdmin){
+    if (!email || !username || !password ){
       return res.status(400).json({
         message: "Fill all the fields",
       });
@@ -44,9 +46,9 @@ exports.registerUser = async (req, res) => {
 
 //Login user
 exports.loginUser = async (req, res) => {
-  const { email, username, password, isAdmin } = req.body;
+  const { email, username, password, isAdmin  } = req.body;
   try {
-    if  (!email || !username || !password || isAdmin){
+    if  (!email || !password ){
       return res.status(400).json({
         message: "Fill all the fields",
       });
@@ -63,7 +65,7 @@ exports.loginUser = async (req, res) => {
           message: "password dosent match",
         });
       }
-      const token = jwt.sign({ id: user._id, username }, "ssssh", {
+      const token = jwt.sign({ id: user._id, username, email, isAdmin }, "ssssh", {
         expiresIn: "1h",
       });
       return res.status(200).json({
@@ -79,6 +81,6 @@ exports.loginUser = async (req, res) => {
     }
   } catch (err) {
     console.log("Error loggin  user:", err);
-    return res.status(500).json({ error: "Error regestring user" });
+    return res.status(500).json({ error: "Error Logging user" });
   }
 };
