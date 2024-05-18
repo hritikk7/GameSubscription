@@ -1,4 +1,4 @@
-const User = require("../models/users");
+const User = require("../models/User/users");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");

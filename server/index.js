@@ -3,6 +3,7 @@ require("dotenv").config;
 const connectDb = require("./db/db")
 const express = require("express")
 const userRoutes = require("./routes/userRoutes")
+const teamRoutes = require("./routes/teamRoutes")
 const port = process.env.PORT | 5000
 
 connectDb()
@@ -14,6 +15,7 @@ app.get("/", (req, res)=>{
 })
 
 app.use("/api/user", userRoutes)
+app.use("/api/teams", teamRoutes)
 
 
 
