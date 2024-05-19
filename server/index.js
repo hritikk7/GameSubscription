@@ -43,7 +43,7 @@ const server = http.createServer(app);
 const io = socketIo(server, { cors: corsOptions });
 
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log("New client connected ");
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
   });
