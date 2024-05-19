@@ -1,25 +1,38 @@
 const Team = require("../models/Teams/teams");
 const User = require("../models/User/users.js");
+
+function convertToSnakeCase(input) {
+  // Convert the string to lowercase
+  let lowercaseString = input.toLowerCase();
+
+  // Replace spaces with underscores
+  let snakeCaseString = lowercaseString.replace(/\s+/g, "_");
+
+  return snakeCaseString;
+}
+
 //create Teams : POST
 
 exports.createTeam = async (req, res) => {
-  const { name, players, match, result } = req.body;
+  const { name } = req.body;
+
+  console.log("name", name);
 
   try {
-    if (!name || !players || !Array.isArray(players) || players.length === 0) {
+    if (!name) {
       return res.status(400).json({
-        message: "Fill all the fields",
+        message: "Fill  the field: Name",
       });
     }
-    const existingTeam = await Team.findOne({ name });
+    let smallCaseName = convertToSnakeCase(name);
+    const existingTeam = await Team.findOne({ name: smallCaseName });
     if (existingTeam) {
       return res.status(400).json({
         message: "Team already exists",
       });
     }
     const newTeam = new Team({
-      name,
-      players,
+      name: smallCaseName,
     });
     await newTeam.save();
     return res.status(200).json({
@@ -28,7 +41,7 @@ exports.createTeam = async (req, res) => {
     });
   } catch (err) {
     console.log("Error Creating, team:", err);
-    return res.status(400).json({ error: "Error regestring Team" });
+    return res.status(400).json({ error: "Error Creating Team" });
   }
 };
 //Get ALL teams : GET
@@ -54,6 +67,7 @@ exports.getTeam = async (req, res) => {
     if (!existingTeam) {
       return res.status(404).json({ error: "Team dosent exist" });
     }
+
     console.log(existingTeam);
     return res.status(200).json({
       message: "Successfully retrieved team",
@@ -67,40 +81,39 @@ exports.getTeam = async (req, res) => {
 
 // upadateTeam : put/teams/:id
 
-exports.updateTeam = async (req, res) => {
-  const { id } = req.params; //team_id
-  const { name, players, matches } = req.body;
-  console.log("matches", id);
-  try {
-    const existingTeam = await Team.findById({ _id: id });
-   
+// exports.updateTeam = async (req, res) => {
+//   const { id } = req.params; //team_id
+//   const { name, players, matches } = req.body;
+//   console.log("matches", id);
+//   try {
+//     const existingTeam = await Team.findById({ _id: id });
 
-    if (!existingTeam) {
-      return res.status(404).json({ error: "Team dosent exist" });
-    }
+//     if (!existingTeam) {
+//       return res.status(404).json({ error: "Team dosent exist" });
+//     }
 
-    if (name) {
-      existingTeam.name = name;
-    }
-    if (players) {
-      existingTeam.players = players;
-    }
-    if (matches) {
-      existingTeam.matches = matches;
-    }
+//     if (name) {
+//       existingTeam.name = name;
+//     }
+//     if (players) {
+//       existingTeam.players = players;
+//     }
+//     if (matches) {
+//       existingTeam.matches = matches;
+//     }
 
-    const updatedTeam = await existingTeam.save();
-    console.log("players", updatedTeam);
+//     const updatedTeam = await existingTeam.save();
+//     console.log("players", updatedTeam);
 
-    return res.status(200).json({
-      message: "Successfully updated team",
-      team: updatedTeam,
-    });
-  } catch (err) {
-    console.log("Error getting  team:", err);
-    return res.status(400).json({ error: "Error getting  Team" });
-  }
-};
+//     return res.status(200).json({
+//       message: "Successfully updated team",
+//       team: updatedTeam,
+//     });
+//   } catch (err) {
+//     console.log("Error getting  team:", err);
+//     return res.status(400).json({ error: "Error getting  Team" });
+//   }
+// };
 
 //subscribe to teams: post: teams/subscribe
 exports.subscribe = async (req, res) => {

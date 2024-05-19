@@ -4,6 +4,8 @@ const express = require("express");
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const teamRoutes = require("./routes/teamRoutes");
+const matchRoutes = require("./routes/matchRoutes");
+const playerRoutes = require("./routes/playerRoutes");
 const verifyToken = require("./middlewares/auth/authMiddleWare");
 const connectDb = require("./db/db");
 const port = process.env.PORT || 5000; // Use logical OR instead of bitwise OR
@@ -42,22 +44,25 @@ const server = http.createServer(app);
 // Create Socket.IO server and attach it to HTTP server
 const io = socketIo(server, { cors: corsOptions });
 
-io.on("connection", (socket) => {
-  console.log("New client connected ");
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-  });
-  socket.on("subscribeToTeam", (teamId) => {
-    socket.join(teamId);
-    console.log(`Client subscribed to team: ${teamId}`);
-  });
+// io.on("connection", (socket) => {
+//   console.log("New client connected ");
+//   socket.on('chat message', (msg) => {
+//     console.log('message: ' + msg);
+//   });
+//   socket.on("subscribeToTeam", (teamId) => {
+//     socket.join(teamId);
+//     console.log(`Client subscribed to team: ${teamId}`);
+//   });
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-  });
-});
+//   socket.on("disconnect", () => {
+//     console.log("Client disconnected");
+//   });
+// });
 app.use("/api/user", userRoutes);
 app.use("/api/teams", verifyToken, teamRoutes);
+app.use("/api/match", verifyToken, matchRoutes);
+app.use("/api/player", verifyToken, playerRoutes);
+
 
 server.listen(port, () => {
   console.log("Listening on port:", port);
