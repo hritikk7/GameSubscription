@@ -1,9 +1,10 @@
 const Match = require("../models/Matches/matches");
 
 exports.createMatch = async (req, res) => {
+  ///teams in an obj with 2 prop : teamA_Id, TeamB_Id
   const { teams, totalOvers } = req.body;
   try {
-    if (!teams || !totalOvers) {
+    if (teams.length == 0 || !totalOvers) {
       return res.status(400).json({
         message: "Fill the fields : teams, overs",
       });
@@ -42,6 +43,10 @@ exports.updateMatch = async (req, res) => {
 
     // Save the updated match
     const updatedMatch = await existingMatch.save();
+    return res.status(200).json({
+      message: "Succesfull",
+      match : updatedMatch
+    });
   } catch (err) {
     console.log("Error Creating, Match:", err);
     return res.status(400).json({ error: "Error Creating Match" });

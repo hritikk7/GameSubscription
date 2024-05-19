@@ -42,7 +42,7 @@ exports.createPlayer = async (req, res) => {
       role,
       smallCaseteam,
     });
-    
+
     await newPlayer.save();
     return res.status(200).json({
       message: "Player created successfully",
