@@ -1,0 +1,56 @@
+ { 
+   "name" : "chennai_super_kings",
+   "players" : [
+     {
+        "name" : "ms_dhoni",
+        "role" : "batsman",
+        "runs" : 6
+     },
+     {
+        "name" : "ruturaj_gaikwad",
+        "role" : "batsman",
+        "runs" : 10
+     },
+     {
+        "name" : "daryl_mitchell",
+        "role" : "batsman",
+        "runs" : 20
+     },{
+        "name" : "ajinkay_rahane",
+        "role" : "batsman",
+        "runs" : 10
+     },{
+        "name" : "shivam_dube",
+        "role" : "batsman",
+        "runs" : 42
+     },{
+        "name" : "mitchell_santner",
+        "role" : "batsman",
+        "runs" : 25
+     },{
+        "name" : "ravindra_jadeja",
+        "role" : "batsman",
+        "runs" : 3
+     }
+    ]
+  // "match" : {
+  //   "opponent" : "royal_challanges_bangalore",
+  //   "date" : "18/5/2024",
+  //   "score" : {
+  //       "innings1" : {
+  //         "runs" : 218,
+  //         "wickets" : 5,
+  //         "overs" : 20
+  //       },
+  //       "innings2" : {
+  //         "runs" : 191,
+  //         "wickets" : 7,
+  //         "overs" : 20
+  //       } 
+  //   }
+     
+  // },
+  // "result" : {
+  //   "enum" : "Lose"
+  // }
+ }
