@@ -15,8 +15,11 @@ const matchSchema = new Schema(
         ref: "Team",
       },
     ],
-    totalRutotalOverns: { type: Number, default: 0 },
-    s : {type : Number, default: 1}
+    totalOvers: { type: Number, default: 0 },
+    winner: {
+      type: String,
+      default: null
+    }
   },
   { timestamps: true }
 );

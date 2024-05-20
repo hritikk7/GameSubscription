@@ -1,46 +1,47 @@
 const Players = require("../models/Players/players");
 const Team = require("../models/Teams/teams");
 
-function convertToSnakeCase(input) {
-  // Convert the string to lowercase
-  let lowercaseString = input.toLowerCase();
+//io instance controller
+const { getSocketIoInstance } = require("../controllers/socketController");
 
-  // Replace spaces with underscores
-  let snakeCaseString = lowercaseString.replace(/\s+/g, "_");
-
-  return snakeCaseString;
-}
+const convertToSnakeCase = (str) => {
+  return str.toLowerCase().replace(/\s+/g, '_');
+};
 
 exports.createPlayer = async (req, res) => {
-  const { name, role, team } = req.body;
+  const { name, role, teamId } = req.body;
 
   try {
-    if (!name || !role || !team) {
+    if (!name || !role || !teamId) {
       return res.status(400).json({
         message: "Fill the fields : Name, Role, Team",
       });
     }
+
     let smallCaseName = convertToSnakeCase(name);
-    let smallCaseteam = convertToSnakeCase(team);
-    const existingTeam = await Team.findOne({ name: smallCaseteam });
+
+    const existingTeam = await Team.findById(teamId);
     if (!existingTeam) {
       return res.status(400).json({
-        message: "Team does not exists",
+        message: "Team does not exist",
       });
     }
+
     const existingPlayer = await Players.findOne({
-      smallCaseName,
-      smallCaseteam,
+      name: smallCaseName,
+      teamId,
     });
+
     if (existingPlayer) {
       return res.status(400).json({
-        message: "Player already  exists in the team",
+        message: "Player already exists in the team",
       });
     }
+
     const newPlayer = new Players({
-      smallCaseName,
+      name: smallCaseName,
       role,
-      smallCaseteam,
+      teamId
     });
 
     await newPlayer.save();
@@ -49,7 +50,39 @@ exports.createPlayer = async (req, res) => {
       player: newPlayer,
     });
   } catch (err) {
-    console.log("Error Creating, team:", err);
-    return res.status(400).json({ error: "Error regestring Team" });
+    console.log("Error creating player:", err);
+    return res.status(400).json({ error: "Error registering player" });
   }
+};
+
+// dummy
+
+const emp = [
+  {
+    FName: "ritik",
+    LName: "kumar",
+    roll: 10,
+  },
+];
+//mock api to update player
+exports.mockUpdate = async (req, res) => {
+  const { data } = req.body;
+  console.log("insside mock update");
+
+  const io = getSocketIoInstance();
+  let id = 1;
+  const newEmpDat = {
+    ...emp,
+    data,
+    id,
+  };
+
+  id++;
+
+  io.to("csk").emit("playerUpdated", newEmpDat);
+
+  return res.status(200).json({
+    message: "mock msg",
+    emp: newEmpDat,
+  });
 };
