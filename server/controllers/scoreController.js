@@ -1,6 +1,8 @@
 const BatInning = require("../models/BatInning/BatInning");
 const BowlInning = require("../models/BowlInning/BowlInning");
 const Score = require("../models/Scores/score");
+const { getSocketIoInstance } = require("../controllers/socketController");
+
 //req: teamId, matchId, runsScored, wicket, isCompleted, currentBatsman, currentBowler,
 // score[playerId, totalScore, status, totalBalls, totalWickets balltype]
 
@@ -104,6 +106,9 @@ exports.updatePerBall = async (req, res) => {
     await battingInning.save();
     await bowlingInning.save();
 
+    const io = getSocketIoInstance();
+    io.to(teamId).emit("matchUpdated", { battingInning, bowlingInning });
+
     return res.status(200).json({
       message: "Ball updated successfully",
       battingInning,
@@ -114,67 +119,3 @@ exports.updatePerBall = async (req, res) => {
     return res.status(400).json({ error: "Error updating ball" });
   }
 };
-// exports.updatePerBall = async (req, res) => {
-//   const { matchId, teamId, ballType, runsScored, isWicket } = req.body;
-//   try {
-//     const battingInning = await BatInning.findOne({
-//       matchId,
-//       teamId,
-//     });
-//     if (!battingInning) {
-//       return res.status(404).json({ error: "Batting inning not found" });
-//     }
-
-//     if (ballType == "legal") {
-//       let batsmanScore = battingInning.scores.find(
-//         (score) => score.playerId.toString() === batsmanId
-//       );
-//       if (!batsmanScore) {
-//         batsmanScore = new Score({ playerId: batsmanId });
-//         battingInning.scores.push(batsmanScore);
-//       }
-//       if (isWicket) {
-//         batsmanScore.status = "Out";
-//         battingInning.totalWickets += 1;
-//       }
-
-//       battingInning.totalRuns += runsScored;
-//       battingInning.currentBatsmen = batsmanId;
-//       batsmanScore.totalScore += runsScored;
-//       batsmanScore.totalBalls += 1;
-//     }
-
-//     if(ballType = "wide"){
-
-//     }
-//     const bowlingInning = await BowlInning.findOne({
-//       matchId,
-//       teamId,
-//     });
-//     if (!bowlingInning) {
-//       return res.status(404).json({ error: "Bowling inning not found" });
-//     }
-//     let bowlerScore = bowlingInning.scores.find(
-//       (score) => score.playerId.toString() === bowlerId
-//     );
-//     if (!bowlerScore) {
-//       bowlerScore = new Score({ playerId: bowlerId });
-//       bowlingInning.scores.push(bowlerScore);
-//     }
-//     bowlerScore.totalBalls += 1;
-//     if (isWicket) {
-//       bowlerScore.totalWickets += 1;
-//     }
-
-//     await battingInning.save();
-//     await bowlingInning.save();
-//     return res.status(200).json({
-//       message: "Ball updated successfully",
-//       battingInning,
-//       bowlingInning,
-//     });
-//   } catch (err) {
-//     console.log("Error updating ball:", err);
-//     return res.status(400).json({ error: "Error updating ball" });
-//   }
-// };

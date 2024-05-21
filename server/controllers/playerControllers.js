@@ -5,7 +5,7 @@ const Team = require("../models/Teams/teams");
 const { getSocketIoInstance } = require("../controllers/socketController");
 
 const convertToSnakeCase = (str) => {
-  return str.toLowerCase().replace(/\s+/g, '_');
+  return str.toLowerCase().replace(/\s+/g, "_");
 };
 
 exports.createPlayer = async (req, res) => {
@@ -41,7 +41,7 @@ exports.createPlayer = async (req, res) => {
     const newPlayer = new Players({
       name: smallCaseName,
       role,
-      teamId
+      teamId,
     });
 
     await newPlayer.save();
@@ -54,7 +54,19 @@ exports.createPlayer = async (req, res) => {
     return res.status(400).json({ error: "Error registering player" });
   }
 };
-
+exports.getAllPlayers = async (req, res) => {
+  console.log("asdfasdfasdf");
+  try {
+    const players = await Players.find({});
+    return res.status(200).json({
+      message: "Successfully retrieved all players",
+      players,
+    });
+  } catch (err) {
+    console.log("Error getting all players", err);
+    return res.status(400).json({ error: "Error getting all players" });
+  }
+};
 // dummy
 
 const emp = [

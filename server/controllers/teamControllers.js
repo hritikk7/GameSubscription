@@ -46,6 +46,7 @@ exports.createTeam = async (req, res) => {
 };
 //Get ALL teams : GET
 exports.getAllTeams = async (req, res) => {
+  console.log("asdfasdfasdf");
   try {
     const teams = await Team.find({});
     return res.status(200).json({
@@ -53,7 +54,7 @@ exports.getAllTeams = async (req, res) => {
       teams,
     });
   } catch (err) {
-    console.log("Error getting all team:", err);
+    console.log("Error getting all Team", err);
     return res.status(400).json({ error: "Error getting all Team" });
   }
 };
